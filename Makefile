@@ -2,9 +2,14 @@ NAME = fractol
 
 FLAG = -Wall -Werror -Wextra
 
-SRC = fractol.c
+SRC = fractol.c\
+	  mandelbrot.c\
+	  julia.c
 
-OBJ= fractol.o
+OBJ= fractol.o\
+	 mandelbrot.o\
+	 julia.o
+
 LIBX = -lm -L libft/ -lft -I/usr/local/include -I/usr/local/lib \
 	   	   -Lminilibx/ -lmlx -framework OpenGL -framework AppKit
 

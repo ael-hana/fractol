@@ -6,7 +6,7 @@
 /*   By: ael-hana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/09 13:02:37 by ael-hana          #+#    #+#             */
-/*   Updated: 2016/11/09 21:57:29 by ael-hana         ###   ########.fr       */
+/*   Updated: 2016/11/10 20:40:24 by ael-hana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,58 +27,14 @@ void		pixel_put_to_image(t_env *ptr, int x, int y)
 	ptr->img.data[pos + 2] = (int)ptr->color >> 16;
 }
 
-void	ft_mandelbrot(t_env *ptr, int x, int y, t_fractal *f)
+void	ft_switch_fractal(t_env *ptr, t_fractal *f)
 {
-	f->c_r = (x / f->zoom_x) + f->x1;
-	f->c_i = (y / f->zoom_x) + f->y1;
-	f->z_r = 0.0;
-	f->z_i = 0.0;
-	f->i = 0;
-	while (f->z_r * f->z_r + f->z_i * f->z_i < 4 && f->i < f->it_max)
-	{
-		f->tmp = f->z_r;
-		f->z_r = f->z_r * f->z_r - f->z_i * f->z_i + f->c_r;
-		f->z_i = 2.0 * f->tmp * f->z_i + f->c_i;
-		++(f->i);
-	}
-	if (f->i == f->it_max)
-		set_color(ptr, 0);
-	else
-		set_color(ptr, ((f->i % 256) * 255 / f->it_max));
-}
-
-void	init_value_mandelbrot(t_fractal *f)
-{
-	f->it_max = 50;
-	f->x1 = -2.1;
-	f->y1 = -1.2;
-	f->x2 = 0.6;
-	f->y2 = 1.2;
-}
-
-void	ft_switch_fractal(t_env *ptr, int ac, char **av, t_fractal *f)
-{
-	int			x;
-	int			y;
-
-	(void)av;
-	y = 0;
-	if (ac == 1)
-	{
-		ptr->switch_fractal = 1;
-		init_value_mandelbrot(f);
-		while (y < WINDOW_Y)
-		{
-			x = 0;
-			while (x < WINDOW_X)
-			{
-				ft_mandelbrot(ptr, x, y, f);
-				pixel_put_to_image(ptr, x, y);
-				x++;
-			}
-			y++;
-		}
-	}
+	if (ptr->switch_fractal == 1)
+		ft_run_mandelbrot(ptr, f);
+	if (ptr->switch_fractal == 2)
+		ft_run_julia(ptr, f);
+	if (ptr->switch_fractal == 3)
+		ft_run_mandelbrot(ptr, f);
 }
 
 int		ft_exit_prog(t_env *ptr)
@@ -99,14 +55,12 @@ int		ft_zoom_mouse(int keycode, t_fractal *f)
 	t_env	*ptr;
 
 	ptr = f->ptr;
-	if (keycode == 126)
-	{
-		f->zoom_x += 10;
-		//mlx_destroy_image(ptr->mlx, ptr->img.img);
-		//get_mlx_img(ptr);
-		ft_switch_fractal(ptr, 1, NULL, f);
-		//mlx_put_image_to_window(ptr->mlx, ptr->win, ptr->img.img, 0, 0);
-	}
+	if (keycode == KEY_NUM_PLUS)
+		f->zoom += 10;
+	else if (keycode == KEY_NUM_MINUS)
+		f->zoom -= 10;
+	ft_switch_fractal(ptr, f);
+	mlx_put_image_to_window(ptr->mlx, ptr->win, ptr->img.img, 0, 0);
 	return (0);
 }
 
@@ -117,18 +71,31 @@ void	init_mlx(t_env *ptr)
 	get_mlx_img(ptr);
 }
 
+void	ft_parse_params(int ac, char **av, t_env *ptr)
+{
+	if (ac == 1)
+		ptr->switch_fractal = 1;
+	else if (av[1][0] == 'm')
+		ptr->switch_fractal = 1;
+	else if (av[1][0] == 'j')
+		ptr->switch_fractal = 2;
+	else
+		ptr->switch_fractal = 1;
+}
+
 int		main(int ac, char **av)
 {
 	t_env		s;
 	t_fractal	f;
 
+	f.zoom = 100;
 	f.ptr = &s;
-	f.zoom_x = 100;
+	ft_parse_params(ac, av, &s);
 	init_mlx(&s);
-	ft_switch_fractal(&s, ac, av, &f);
+	ft_switch_fractal(&s, &f);
 	mlx_put_image_to_window(s.mlx, s.win, s.img.img, 0, 0);
 	mlx_hook(s.win, DESTROY_NOTIFY, DESTROY_MASK, ft_exit_prog, &s);
-	mlx_key_hook(s.win, ft_zoom_mouse, &s);
+	mlx_key_hook(s.win, ft_zoom_mouse, &f);
 	mlx_loop(s.mlx);
 	return (0);
 }
