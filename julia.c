@@ -45,8 +45,8 @@ void	ft_run_julia(t_env *ptr, t_fractal *f)
 
 void		ft_julia(t_env *ptr, int x, int y, t_fractal *f)
 {
-	f->c_r = ptr->mouse_x/*0.285*/;
-	f->c_i = ptr->mouse_y/*0.01*/;
+	f->c_r = ptr->mouse_x;
+	f->c_i = ptr->mouse_y;
 	f->z_r = x / f->zoom + f->x1;
 	f->z_i = y / f->zoom + f->y1;
 	f->i = 0;

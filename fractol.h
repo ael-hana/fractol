@@ -23,6 +23,10 @@
 # define DESTROY_MASK (1L<<17)
 # define MOTION_NOTIFY 6
 # define PTR_MOTION_MASK (1L<<6)
+# define BUTTONPRESS 4
+# define BUTTONPRESS_MASK (1L<<10)
+# define MOUSE_WHEEL_UP 5
+# define MOUSE_WHEEL_DOWN 4
 
 typedef struct			s_img
 {
