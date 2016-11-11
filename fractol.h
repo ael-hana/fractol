@@ -21,6 +21,8 @@
 # define WINDOW_Y 500
 # define DESTROY_NOTIFY 17
 # define DESTROY_MASK (1L<<17)
+# define MOTION_NOTIFY 6
+# define PTR_MOTION_MASK (1L<<6)
 
 typedef struct			s_img
 {
@@ -70,4 +72,8 @@ void					init_value_mandelbrot(t_fractal *f);
 void					init_value_julia(t_fractal *f);
 int						ft_exit_prog(t_env *ptr);
 void					ft_julia(t_env *ptr, int x, int y, t_fractal *f);
+int						mouse_slide(int x, int y, t_fractal *f);
+void					ft_switch_fractal(t_env *ptr, t_fractal *f);
+void					ft_burningship(t_env *e, int x, int y, t_fractal *f);
+void					ft_run_burn(t_env *ptr, t_fractal *f);
 #endif

@@ -34,7 +34,7 @@ void	ft_switch_fractal(t_env *ptr, t_fractal *f)
 	if (ptr->switch_fractal == 2)
 		ft_run_julia(ptr, f);
 	if (ptr->switch_fractal == 3)
-		ft_run_mandelbrot(ptr, f);
+		ft_run_burn(ptr, f);
 }
 
 int		ft_exit_prog(t_env *ptr)
@@ -55,10 +55,14 @@ int		ft_zoom_mouse(int keycode, t_fractal *f)
 	t_env	*ptr;
 
 	ptr = f->ptr;
-	if (keycode == KEY_NUM_PLUS)
-		f->zoom += 10;
+	if (keycode == KEY_NUM_PLUS || keycode == KEY_CTRL_RIGHT)
+		f->zoom += 100;
 	else if (keycode == KEY_NUM_MINUS)
 		f->zoom -= 10;
+	else
+		return (0);
+	ft_putnbr(keycode);
+	ft_putchar('\n');
 	ft_switch_fractal(ptr, f);
 	mlx_put_image_to_window(ptr->mlx, ptr->win, ptr->img.img, 0, 0);
 	return (0);
@@ -79,6 +83,8 @@ void	ft_parse_params(int ac, char **av, t_env *ptr)
 		ptr->switch_fractal = 1;
 	else if (av[1][0] == 'j')
 		ptr->switch_fractal = 2;
+	else if (av[1][0] == 'b')
+		ptr->switch_fractal = 3;
 	else
 		ptr->switch_fractal = 1;
 }
@@ -88,13 +94,14 @@ int		main(int ac, char **av)
 	t_env		s;
 	t_fractal	f;
 
-	f.zoom = 100;
+	f.zoom = 300;
 	f.ptr = &s;
 	ft_parse_params(ac, av, &s);
 	init_mlx(&s);
 	ft_switch_fractal(&s, &f);
 	mlx_put_image_to_window(s.mlx, s.win, s.img.img, 0, 0);
 	mlx_hook(s.win, DESTROY_NOTIFY, DESTROY_MASK, ft_exit_prog, &s);
+	mlx_hook(s.win, MOTION_NOTIFY, PTR_MOTION_MASK, mouse_slide, &f);
 	mlx_key_hook(s.win, ft_zoom_mouse, &f);
 	mlx_loop(s.mlx);
 	return (0);
