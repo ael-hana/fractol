@@ -29,7 +29,6 @@ void	ft_run_julia(t_env *ptr, t_fractal *f)
 	int	x;
 	int	y;
 
-	init_value_julia(f);
 	y = 0;
 	while (y < WINDOW_Y)
 	{

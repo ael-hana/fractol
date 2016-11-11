@@ -59,12 +59,34 @@ int		ft_zoom_mouse(int keycode, t_fractal *f)
 		f->zoom += 100;
 	else if (keycode == KEY_NUM_MINUS)
 		f->zoom -= 10;
+	else if (keycode == KEY_NUM_MINUS)
+		f->zoom -= 10;
+	else if (keycode == KEY_UP)
+	{
+		f->y1 -= 0.5;
+		f->y2 -= 0.5;
+	}
+	else if (keycode == KEY_DOWN)
+	{
+		f->y1 += 0.5;
+		f->y2 += 0.5;
+	}
+	else if (keycode == KEY_LEFT)
+	{
+		f->x1 -= 0.5;
+		f->x2 -= 0.5;
+	}
+	else if (keycode == KEY_RIGHT)
+	{
+		f->x1 += 0.5;
+		f->x2 += 0.5;
+	}
 	else
 		return (0);
-	ft_putnbr(keycode);
-	ft_putchar('\n');
 	ft_switch_fractal(ptr, f);
 	mlx_put_image_to_window(ptr->mlx, ptr->win, ptr->img.img, 0, 0);
+	//ft_putnbr(keycode);
+	//ft_putchar('\n');
 	return (0);
 }
 
@@ -75,18 +97,28 @@ void	init_mlx(t_env *ptr)
 	get_mlx_img(ptr);
 }
 
-void	ft_parse_params(int ac, char **av, t_env *ptr)
+void	ft_parse_params(int ac, char **av, t_env *ptr, t_fractal *f)
 {
-	if (ac == 1)
+	if (ac == 1 || av[1][0] == 'm')
+	{
 		ptr->switch_fractal = 1;
-	else if (av[1][0] == 'm')
-		ptr->switch_fractal = 1;
+		init_value_mandelbrot(f);
+	}
 	else if (av[1][0] == 'j')
+	{
 		ptr->switch_fractal = 2;
+		init_value_julia(f);
+	}
 	else if (av[1][0] == 'b')
+	{
 		ptr->switch_fractal = 3;
+		init_value_mandelbrot(f);
+	}
 	else
+	{
 		ptr->switch_fractal = 1;
+		init_value_mandelbrot(f);
+	}
 }
 
 int		main(int ac, char **av)
@@ -96,7 +128,7 @@ int		main(int ac, char **av)
 
 	f.zoom = 300;
 	f.ptr = &s;
-	ft_parse_params(ac, av, &s);
+	ft_parse_params(ac, av, &s, &f);
 	init_mlx(&s);
 	ft_switch_fractal(&s, &f);
 	mlx_put_image_to_window(s.mlx, s.win, s.img.img, 0, 0);

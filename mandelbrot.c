@@ -17,7 +17,6 @@ void	ft_run_mandelbrot(t_env *ptr, t_fractal *f)
 	int	x;
 	int	y;
 
-	init_value_mandelbrot(f);
 	y = 0;
 	while (y < WINDOW_Y)
 	{
