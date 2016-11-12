@@ -6,21 +6,22 @@
 /*   By: ael-hana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/10 18:58:19 by ael-hana          #+#    #+#             */
-/*   Updated: 2016/11/10 20:40:23 by ael-hana         ###   ########.fr       */
+/*   Updated: 2016/11/12 21:33:01 by ael-hana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-int			mouse_slide(int x, int y, t_fractal *f)
+int		mouse_slide(int x, int y, t_fractal *f)
 {
 	t_env	*ptr;
 
 	ptr = f->ptr;
-	ptr->mouse_x = (((f->x2 - f->x1) * x) / WINDOW_X) + f->x1;
-	ptr->mouse_y = (((f->y2 - f->y1) * y) / WINDOW_Y) + f->y1;
+	ptr->mouse_x = ((((f->x2 - f->x1) * x) / (WINDOW_X / 4)) + f->x1);
+	ptr->mouse_y = ((((f->y2 - f->y1) * y) / (WINDOW_Y / 4)) + f->y1);
 	ft_switch_fractal(ptr, f);
 	mlx_put_image_to_window(ptr->mlx, ptr->win, ptr->img.img, 0, 0);
+	display_menu(ptr);
 	return (0);
 }
 
@@ -43,7 +44,7 @@ void	ft_run_julia(t_env *ptr, t_fractal *f)
 	}
 }
 
-void		ft_julia(t_env *ptr, int x, int y, t_fractal *f)
+void	ft_julia(t_env *ptr, int x, int y, t_fractal *f)
 {
 	f->c_r = ptr->mouse_x;
 	f->c_i = ptr->mouse_y;
@@ -65,9 +66,9 @@ void		ft_julia(t_env *ptr, int x, int y, t_fractal *f)
 
 void	init_value_julia(t_fractal *f)
 {
-	f->it_max = 150;
-	f->x1 = -1;
-	f->x2 = 1;
-	f->y1 = -1.2;
-	f->y2 = 1.2;
+	f->it_max = 10;
+	f->x1 = -2;
+	f->x2 = 2;
+	f->y1 = -2;
+	f->y2 = 2;
 }

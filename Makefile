@@ -5,12 +5,16 @@ FLAG = -Wall -Werror -Wextra
 SRC = fractol.c\
 	  mandelbrot.c\
 	  julia.c\
-	  burningship.c
+	  burningship.c\
+	  tool2.c\
+	  tool.c
 
 OBJ= fractol.o\
 	 mandelbrot.o\
 	 julia.o\
-	 burningship.o
+	 burningship.o\
+	 tool2.o\
+	 tool.o
 
 LIBX = -lm -L libft/ -lft -I/usr/local/include -I/usr/local/lib \
 	   	   -Lminilibx/ -lmlx -framework OpenGL -framework AppKit
